@@ -1,8 +1,20 @@
 use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
+use askama::Template;
+
+#[derive(Template)]
+#[template(path = "welcome.html")]
+struct WelcomeTemplate<'a> {
+    title: &'a str,
+    body: &'a str,
+}
 
 #[get("/")]
 async fn hello() -> impl Responder {
-    HttpResponse::Ok().body("Hello World!")
+    let template = WelcomeTemplate {
+        title: "Welcome",
+        body: "To The Bookstore!",
+    };
+    HttpResponse::Ok().body(template.body)
 }
 
 #[post("/echo")]
